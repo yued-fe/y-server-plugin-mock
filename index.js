@@ -2,6 +2,7 @@
 require('colors');
 
 const path = require('path');
+const url = require('url');
 
 const getMockData = require('./lib/getMockData.js');
 
@@ -35,6 +36,11 @@ module.exports = function (options) {
 
     app.use(function (req, res, next) {
       res.getMockData = function (mockPath) {
+        // 对 mockPath = "/foo?bar=1" 这种情况作特别处理，在 req 中加上 $query = { bar: 1 }
+        const mockPathObj = url.parse(mockPath, true);
+        mockPath = mockPathObj.pathname;
+        req.$query = mockPathObj.query;
+
         return getMockData(path.join(mockDir, mockPath), req, res).then(function (data) {
           return typeof mockAdapter === 'function' ? mockAdapter(data, req, res) : data;
         });
