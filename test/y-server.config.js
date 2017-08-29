@@ -15,7 +15,7 @@ module.exports = {
     }),
     (app) => {
       app.get('/', (req, res, next) => {
-        res.getMockData('/api/foo').then(data => res.send(data)).catch(next);
+        res.getMockData('/api/foo?bar=1').then(data => res.send(data)).catch(next);
       });
     },
   ],

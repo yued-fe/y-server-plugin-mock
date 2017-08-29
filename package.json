@@ -1,6 +1,6 @@
 {
   "name": "y-server-plugin-mock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "SmadeyZhang",
   "license": "MIT",
   "description": "y-server mock plugin",
