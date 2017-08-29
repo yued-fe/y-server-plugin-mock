@@ -1,0 +1,25 @@
+{
+  "name": "y-server-plugin-mock",
+  "version": "0.0.1",
+  "author": "SmadeyZhang",
+  "license": "MIT",
+  "description": "y-server mock plugin",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yued-fe/y-server-plugin-mock.git"
+  },
+  "scripts": {
+    "test": "y-server --config ./test/y-server.config.js --hot"
+  },
+  "dependencies": {
+    "colors": "^1.1.2"
+  },
+  "devDependencies": {
+    "y-server": "~0.0.2"
+  }
+}
