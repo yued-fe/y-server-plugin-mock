@@ -6,6 +6,8 @@ const url = require('url');
 
 const getMockData = require('./lib/getMockData.js');
 
+const noop = function (d) { return d };
+
 /**
  * 数据模拟插件
  * @param {Object} options 配置
@@ -22,7 +24,7 @@ module.exports = function (options) {
 
   const mockEnable = options.mockEnable;
   const mockDir = options.mockDir;
-  const mockAdapter = options.mockAdapter;
+  const mockAdapter = typeof options.mockAdapter === 'function' ? options.mockAdapter : noop;
   const mockPaths = options.mockPaths;
 
   /**
@@ -35,17 +37,22 @@ module.exports = function (options) {
     }
 
     app.use(function (req, res, next) {
+      // 提供 mock 方法，完善模拟数据
+      res.mock = function (data) {
+        return Promise.resolve(mockAdapter(data, req, res));
+      };
+
+      // 提供 getMockData 方法，为指定后端请求路径时获取模拟数据
       res.getMockData = function (mockPath) {
         // 对 mockPath = "/foo?bar=1" 这种情况作特别处理，在 req 中加上 $query = { bar: 1 }
         const mockPathObj = url.parse(mockPath, true);
         mockPath = mockPathObj.pathname;
         req.$query = mockPathObj.query;
 
-        return getMockData(path.join(mockDir, mockPath), req, res).then(function (data) {
-          return typeof mockAdapter === 'function' ? mockAdapter(data, req, res) : data;
-        });
+        return getMockData(path.join(mockDir, mockPath), req, res).then(res.mock);
       };
 
+      // 提供 sendMock 方法，为直接返回模拟数据
       res.sendMock = function () {
         return res.getMockData(req.path).then(function (data) {
           res.send(data);
