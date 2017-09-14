@@ -39,6 +39,10 @@ module.exports = function (options) {
     app.use(function (req, res, next) {
       // 提供 mock 方法，完善模拟数据
       res.mock = function (data) {
+        if (res.$mocked) {
+          return Promise.resolve(data);
+        }
+        res.$mocked = true;
         return Promise.resolve(mockAdapter(data, req, res));
       };
 
