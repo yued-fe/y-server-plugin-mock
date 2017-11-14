@@ -1,6 +1,6 @@
 {
   "name": "y-server-plugin-mock",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "SmadeyZhang",
   "license": "MIT",
   "description": "y-server mock plugin",
@@ -20,6 +20,6 @@
     "colors": "^1.1.2"
   },
   "devDependencies": {
-    "y-server": "~0.0.2"
+    "y-server": "~0.0.9"
   }
 }
