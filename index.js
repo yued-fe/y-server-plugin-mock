@@ -46,19 +46,19 @@ module.exports = function (options) {
         return Promise.resolve(mockAdapter(data, req, res));
       };
 
-      // 提供 getMockData 方法，为指定后端请求路径时获取模拟数据
-      res.getMockData = function (mockPath) {
-        // 对 mockPath = "/foo?bar=1" 这种情况作特别处理，在 req 中加上 $query = { bar: 1 }
-        const mockPathObj = url.parse(mockPath, true);
-        mockPath = mockPathObj.pathname;
-        req.$query = mockPathObj.query;
+      // 提供 getMockData 方法，返回指定地址的模拟数据
+      res.getMockData = function (mockUrl) {
+        const mockUrlObj = url.parse(mockUrl, true, true);
+        const mockPath = url.parse(mockUrl, true, true).pathname;
+
+        req.$mockUrl = mockUrlObj.path;
 
         return getMockData(path.join(mockDir, mockPath), req, res).then(res.mock);
       };
 
-      // 提供 sendMock 方法，为直接返回模拟数据
+      // 提供 sendMock 方法，返回当前地址的模拟数据
       res.sendMock = function () {
-        return res.getMockData(req.path).then(function (data) {
+        return res.getMockData(req.originalUrl).then(function (data) {
           res.send(data);
         });
       };

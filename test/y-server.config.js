@@ -11,16 +11,16 @@ module.exports = {
       mockEnable: true,
       mockDir: path.join(__dirname, './json'), // 模拟数据根目录
       mockAdapter: require('./json/adapter.js'),
-      mockPaths: ['/api/*'],
+      // mockPaths: ['/api/*'],
     }),
     (app) => {
       app.get('/', (req, res, next) => {
         res.mock({}).then(data => res.send(data)).catch(next);
       });
-      app.get('/bar', (req, res, next) => {
+      app.use('/bar', (req, res, next) => {
         res.getMockData('/api/bar?foo=1').then(data => res.send(data)).catch(next);
       });
-      app.get('/api/foo', (req, res, next) => {
+      app.use('/api/foo', (req, res, next) => {
         res.sendMock().catch(next);
       });
     },
